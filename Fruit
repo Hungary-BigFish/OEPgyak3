@@ -1,0 +1,85 @@
+#include<iostream>
+
+using namespace std;
+
+class fruit{
+
+private:
+    std::string _color;
+    int _weight;
+public:
+    //fruit(){};
+
+    enum fruitError{TooBig,isnull};
+
+    friend std::ostream& operator<<(std::ostream& s, const fruit& q){
+        std::cout << q._color << "szín " << q._weight << "súly" << endl;
+
+    }
+
+    void setColor(string color){
+        _color=color;
+    }
+
+    void setWeight(int weight) throw (fruitError){
+        if(weight > 200) throw TooBig;
+        _weight=weight;
+    }
+
+    string getColor(){
+        return _color;
+    }
+    int getWeight(){
+        return _weight;
+    }
+};
+
+
+//#define NORMAL_MODE
+#ifdef NORMAL_MODE
+
+int main(){
+
+    try{
+        fruit alma;
+		//alma.setColor("zöld");
+        alma.setWeight(200);
+    }
+    catch(fruit::fruitError err){
+        cout << "tul nagy tomegu a gyumolcs";
+    }
+
+
+return 0;
+}
+
+#else
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"
+
+    TEST_CASE("setWeight","Fruit")
+{
+
+    SECTION("add"){
+        int a=6;
+        int b=5;
+        /*valami*/
+        CHECK(a+b==11);
+    }
+    SECTION("normal")
+    {
+        fruit Q1;
+        Q1.setWeight(100);
+        CHECK(Q1.getWeight()==100);
+    }
+    SECTION("tulnagy")
+    {
+        fruit Q2;
+        CHECK_THROWS(Q2.setWeight(201));
+    }
+}
+
+
+
+
+#endif
